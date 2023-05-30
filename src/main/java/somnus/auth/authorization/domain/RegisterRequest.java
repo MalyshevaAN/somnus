@@ -9,10 +9,9 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtRequest {
+public class RegisterRequest {
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
 }
-
-
-

@@ -11,11 +11,12 @@ import somnus.auth.User.Exceptions.UserCannotSubscribeOnHimself;
 import somnus.auth.User.Exceptions.UserNotFound;
 import somnus.auth.User.service.UserService;
 import somnus.auth.User.views.UserView;
+import somnus.auth.authorization.domain.AuthenticationResponse;
 import somnus.auth.authorization.domain.JwtAuthentication;
+import somnus.auth.authorization.domain.RegisterRequest;
 import somnus.auth.authorization.domain.User;
 import somnus.auth.authorization.service.AuthService;
 
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -29,9 +30,9 @@ public class Controller {
     UserService userService;
 
     @PostMapping("register")
-    public ResponseEntity<UserView> registerUser(@RequestBody User user) {
+    public ResponseEntity<AuthenticationResponse> registerUser(@RequestBody RegisterRequest request) {
         try {
-            UserView newUser = authService.registerUser(user);
+            AuthenticationResponse newUser = authService.registerUser(request);
             return ResponseEntity.ok().body(newUser);
         }catch (UserAlreadyExists e){
             return new ResponseEntity<>(HttpStatus.CONFLICT);

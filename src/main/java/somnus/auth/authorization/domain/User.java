@@ -2,11 +2,11 @@ package somnus.auth.authorization.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import somnus.auth.Comment.model.Comment;
 import somnus.auth.Dream.model.Dream;
 
@@ -16,9 +16,10 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "somnusUser")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +33,8 @@ public class User {
     private String passwordConfirm;
     private String firstName;
     private String lastName;
-    private Set<Role> roles = Set.of(Role.USER);
+    @Enumerated(EnumType.STRING)
+    private Role roles;
 
     @JsonIgnore
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
@@ -70,5 +72,40 @@ public class User {
         if (this.subscribtions.contains(subscription)){
             this.subscribtions.remove(subscription);
         }
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(roles.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
