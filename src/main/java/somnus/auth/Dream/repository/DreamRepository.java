@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface DreamRepository extends JpaRepository<Dream, Long> {
     public Optional<Dream> findFirstByOrderByIdDesc();
 
-    public Optional<List<Dream>> findDreamByAuthorId(long id);
+    public List<Dream> findDreamByAuthorId(long id);
 
 }

@@ -24,12 +24,12 @@ public class UserService {
 
     public Optional<User> getByLogin(@NonNull String login) {
         return userRepository.findAll().stream()
-                .filter(user -> login.equals(user.getLogin()))
+                .filter(user -> login.equals(user.getEmail()))
                 .findFirst();
     }
 
     public UserView addUser(User user) throws UserAlreadyExists, PasswordsAreDifferent {
-        if (userRepository.existsByLogin(user.getLogin())) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserAlreadyExists();
         }
 
@@ -37,7 +37,7 @@ public class UserService {
             throw new PasswordsAreDifferent();
         }
         User newUser = new User();
-        newUser.setLogin(user.getLogin());
+        newUser.setEmail(user.getEmail());
 //        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         newUser.setPassword(user.getPassword());
         newUser.setFirstName(user.getFirstName());
@@ -92,7 +92,7 @@ public class UserService {
 
     protected UserView returnUserView (User user){
         UserView returnUpdatedUser = new UserView();
-        returnUpdatedUser.setLogin(user.getLogin());
+        returnUpdatedUser.setEmail(user.getEmail());
         returnUpdatedUser.setId(user.getId());
         returnUpdatedUser.setFirstName(user.getFirstName());
         returnUpdatedUser.setLastName(user.getLastName());

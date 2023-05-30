@@ -39,7 +39,7 @@ public class DreamController {
     public ResponseEntity<Dream>  addDream(@RequestBody DreamView dreamView){
         final JwtAuthentication authInfo = authService.getAuthInfo();
         Optional<Dream> dream = dreamService.addDream(dreamView, authInfo.getCredentials());
-        return dream.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        return dream.map(value -> new ResponseEntity<>(dream.get(), HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
     @PutMapping("update/{id}")
@@ -81,15 +81,21 @@ public class DreamController {
 
     @GetMapping("users/{userId}")
     public ResponseEntity<List<Dream>> getUsersDreams(@PathVariable long userId){
-        Optional<List<Dream>> usersDreams = dreamService.getUserDreams(userId);
-        return usersDreams.map(value -> ResponseEntity.ok().body(usersDreams.get())).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        List<Dream> usersDreams = dreamService.getUserDreams(userId);
+        if (usersDreams.size() != 0){
+            return ResponseEntity.ok().body(usersDreams);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("my")
     public ResponseEntity<List<Dream>> getMyDreams(){
         final JwtAuthentication authInfo = authService.getAuthInfo();
-        Optional<List<Dream>> myDreams = dreamService.getUserDreams(authInfo.getCredentials());
-        return myDreams.map(value -> ResponseEntity.ok().body(myDreams.get())).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        List<Dream> myDreams = dreamService.getUserDreams(authInfo.getCredentials());
+        if (myDreams.size() != 0){
+            return ResponseEntity.ok().body(myDreams);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/like/{dreamId}")

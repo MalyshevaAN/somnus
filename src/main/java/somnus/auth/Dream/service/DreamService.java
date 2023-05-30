@@ -81,7 +81,7 @@ public class DreamService {
         return Optional.empty();
     }
 
-    public Optional<List<Dream>> getUserDreams(long authorId){
+    public List<Dream> getUserDreams(long authorId){
         return dreamRepository.findDreamByAuthorId(authorId);
     }
 

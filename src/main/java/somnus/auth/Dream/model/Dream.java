@@ -29,7 +29,7 @@ public class Dream {
 
     @Basic
     @Column(name = "DateCreation")
-    private final LocalDateTime localDateTime = LocalDateTime.now();
+    private final LocalDateTime timeCreation = LocalDateTime.now();
 
 
     @ManyToOne(cascade = CascadeType.ALL)

@@ -8,7 +8,7 @@ import lombok.Setter;
 public class UserView {
 
     private long id;
-    private String login;
+    private String email;
     private String firstName;
     private String lastName;
 

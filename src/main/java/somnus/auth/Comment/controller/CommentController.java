@@ -33,7 +33,7 @@ public class CommentController {
         final JwtAuthentication authInfo = authService.getAuthInfo();
         try {
             Optional<Comment> newComment = commentService.addComment(comment, dreamId, authInfo.getCredentials());
-            return newComment.map(value -> ResponseEntity.ok(newComment.get())).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+            return newComment.map(value -> new ResponseEntity<>(newComment.get(), HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
         } catch(DreamNotExistsException | UsernameNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
